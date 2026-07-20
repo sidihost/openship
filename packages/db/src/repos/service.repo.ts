@@ -267,7 +267,7 @@ export function createServiceRepo(db: Database) {
       }[],
     ) {
       const existing = await this.listByProjectKind(projectId, "monorepo");
-      const existingByName = new Map(existing.map((s) => [s.name, s]));
+      const existingByName = new Map<string, Service>(existing.map((s) => [s.name, s]));
       const incomingNames = new Set(apps.map((a) => a.name));
 
       const results: Service[] = [];
@@ -275,11 +275,11 @@ export function createServiceRepo(db: Database) {
         const ex = existingByName.get(app.name);
 
         const routing = normalizeRoutingFields({
-          exposed: app.exposed ?? ex?.exposed ?? true,
-          exposedPort: app.exposedPort ?? ex?.exposedPort ?? (app.port != null ? String(app.port) : null),
-          domain: app.domain ?? ex?.domain,
-          customDomain: app.customDomain ?? ex?.customDomain,
-          domainType: app.domainType ?? ex?.domainType,
+          exposed: app.exposed ?? (ex ? ex.exposed : true),
+          exposedPort: app.exposedPort ?? (ex ? ex.exposedPort : (app.port != null ? String(app.port) : null)),
+          domain: app.domain ?? (ex ? ex.domain : undefined),
+          customDomain: app.customDomain ?? (ex ? ex.customDomain : undefined),
+          domainType: app.domainType ?? (ex ? ex.domainType : undefined),
         });
 
         const fields = {
@@ -354,7 +354,7 @@ export function createServiceRepo(db: Database) {
 
       const all = await this.listByProject(projectId);
       const composeExisting = all.filter((s) => s.kind === "compose" || s.kind === null);
-      const existingByName = new Map(composeExisting.map((s) => [s.name, s]));
+      const existingByName = new Map<string, Service>(composeExisting.map((s) => [s.name, s]));
       const incomingNames = new Set(composeParsed.map((s) => s.name));
 
       // Create or update
@@ -363,11 +363,11 @@ export function createServiceRepo(db: Database) {
         const ex = existingByName.get(p.name);
 
         const routing = normalizeRoutingFields({
-          exposed: p.exposed ?? (ex?.exposed || false),
-          exposedPort: p.exposedPort ?? ex?.exposedPort,
-          domain: p.domain ?? ex?.domain,
-          customDomain: p.customDomain ?? ex?.customDomain,
-          domainType: p.domainType ?? ex?.domainType,
+          exposed: p.exposed ?? (ex ? ex.exposed : false),
+          exposedPort: p.exposedPort ?? (ex ? ex.exposedPort : undefined),
+          domain: p.domain ?? (ex ? ex.domain : undefined),
+          customDomain: p.customDomain ?? (ex ? ex.customDomain : undefined),
+          domainType: p.domainType ?? (ex ? ex.domainType : undefined),
         });
 
         if (ex) {
@@ -432,7 +432,7 @@ export function createServiceRepo(db: Database) {
       const composeParsed = parsed.filter((p) => !p.kind || p.kind === "compose");
       const all = await this.listByProject(projectId);
       const composeExisting = all.filter((s) => s.kind === "compose" || s.kind === null);
-      const existingByName = new Map(composeExisting.map((s) => [s.name, s]));
+      const existingByName = new Map<string, Service>(composeExisting.map((s) => [s.name, s]));
       const incomingNames = new Set(composeParsed.map((s) => s.name));
       const driftedNames: string[] = [];
 

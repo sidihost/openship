@@ -4,7 +4,7 @@
 import { Hono } from "hono";
 import { hostname, userInfo } from "node:os";
 import { cloudRuntimeTarget, env } from "../../config/env";
-import apiPackage from "../../../package.json";
+import apiPackage from "../../../package.json" with { type: "json" };
 
 /** Running server version (from apps/api/package.json). Lets the dashboard tell
  *  a self-hosted operator their instance is outdated / has a security advisory.
