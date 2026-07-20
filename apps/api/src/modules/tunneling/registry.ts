@@ -36,9 +36,10 @@ export async function describeProviders(): Promise<
   return Promise.all(
     listProviders().map(async (name) => {
       const result = await PROVIDERS[name].preflight();
-      return result.ok
-        ? { name, ready: true }
-        : { name, ready: false, reason: result.reason };
+      if (result.ok) {
+        return { name, ready: true };
+      }
+      return { name, ready: false, reason: (result as { ok: false; reason: string }).reason };
     }),
   );
 }

@@ -516,7 +516,7 @@ export class SshExecutor implements CommandExecutor {
         await uploadFileWithRsync(localArchive, remoteArchive, deps, onLog);
       } else {
         onLog?.(
-          logEntry(`Uploading ${formatBytes(totalBytes)} archive via SFTP (resumable) — ${rsync.reason}.`),
+          logEntry(`Uploading ${formatBytes(totalBytes)} archive via SFTP (resumable) — ${(rsync as { ok: false; reason: string }).reason}.`),
         );
         await this.sftpUploadResumable(localArchive, remoteArchive, totalBytes, onLog);
       }

@@ -68,7 +68,7 @@ export async function resolveSmartRoute(
       if (!compare) {
         resolvedForceAll = true; // can't determine the diff → safe full rebuild
       } else {
-        const files = new Set(compare.files);
+        const files = new Set<string>(compare.files);
         resolvedChangedPaths = Array.from(files);
         const cls = classifyChangedFiles(files, {
           isMonorepo: project.framework === "monorepo" || routable.length > 0,

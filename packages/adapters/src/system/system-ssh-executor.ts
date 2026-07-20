@@ -351,7 +351,7 @@ export class SystemSshExecutor implements CommandExecutor {
         // No rsync → stream over the master. The `cat >` truncates, so this
         // restarts (not resumes) on failure; bounded retry.
         onLog?.(
-          logEntry(`Uploading ${formatBytes(totalBytes)} archive over the SSH connection — ${rsync.reason}.`),
+          logEntry(`Uploading ${formatBytes(totalBytes)} archive over the SSH connection — ${(rsync as { ok: false; reason: string }).reason}.`),
         );
         await this.streamArchiveWithRetry(localArchive, remoteArchive, onLog);
       }

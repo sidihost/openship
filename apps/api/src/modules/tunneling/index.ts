@@ -59,7 +59,7 @@ export async function provisionTunnel(opts: {
   const provider = resolveProvider(opts.provider);
   const pre = await provider.preflight();
   if (!pre.ok) {
-    throw new ProviderNotReadyError(opts.provider, pre.reason);
+    throw new ProviderNotReadyError(opts.provider, (pre as { ok: false; reason: string }).reason);
   }
   return provider.create({
     name: opts.name,

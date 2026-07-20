@@ -15,7 +15,7 @@
  * multiple CacheStore namespaces share one connection.
  */
 
-import type IORedis from "ioredis";
+import type { Redis } from "ioredis";
 import type { CacheStore } from "./types";
 
 const SCAN_BATCH = 200;
@@ -23,10 +23,10 @@ const UNLINK_BATCH = 500;
 
 export class RedisCacheStore<T> implements CacheStore<T> {
   readonly name = "redis" as const;
-  private readonly client: IORedis;
+  private readonly client: Redis;
   private readonly namespace: string;
 
-  constructor(client: IORedis, namespace: string) {
+  constructor(client: Redis, namespace: string) {
     this.client = client;
     this.namespace = namespace;
   }

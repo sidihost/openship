@@ -271,8 +271,7 @@ export function createServiceRepo(db: Database) {
       const incomingNames = new Set(apps.map((a) => a.name));
 
       const results: Service[] = [];
-      for (let i = 0; i < apps.length; i++) {
-        const app = apps[i];
+      for (const [i, app] of apps.entries()) {
         const ex = existingByName.get(app.name);
 
         const routing = normalizeRoutingFields({
@@ -360,8 +359,7 @@ export function createServiceRepo(db: Database) {
 
       // Create or update
       const results: Service[] = [];
-      for (let i = 0; i < composeParsed.length; i++) {
-        const p = composeParsed[i];
+      for (const [i, p] of composeParsed.entries()) {
         const ex = existingByName.get(p.name);
 
         const routing = normalizeRoutingFields({
@@ -438,8 +436,7 @@ export function createServiceRepo(db: Database) {
       const incomingNames = new Set(composeParsed.map((s) => s.name));
       const driftedNames: string[] = [];
 
-      for (let i = 0; i < composeParsed.length; i++) {
-        const p = composeParsed[i];
+      for (const [i, p] of composeParsed.entries()) {
         const theirs = toComposeSpec(p);
         const ex = existingByName.get(p.name);
 
