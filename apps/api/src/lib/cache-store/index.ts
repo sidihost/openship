@@ -16,7 +16,7 @@
  * to opt out of Redis even when REDIS_URL is set).
  */
 
-import IORedis from "ioredis";
+import { Redis } from "ioredis";
 import { env, REDIS_REQUIRED } from "../../config/env";
 import { MemoryCacheStore } from "./memory";
 import { RedisCacheStore } from "./redis";
@@ -28,7 +28,7 @@ type Backend = "redis" | "memory";
 
 let backendDecision: Backend | null = null;
 let resolvingPromise: Promise<Backend> | null = null;
-let sharedRedis: IORedis | null = null;
+let sharedRedis: Redis | null = null;
 const trackedStores = new Set<CacheStore<unknown>>();
 
 /**
@@ -41,7 +41,7 @@ const trackedStores = new Set<CacheStore<unknown>>();
 const storesByNamespace = new Map<string, Promise<CacheStore<unknown>>>();
 
 async function isRedisReachable(timeoutMs = 2000): Promise<boolean> {
-  const probe = new IORedis(env.REDIS_URL, {
+  const probe = new Redis(env.REDIS_URL, {
     lazyConnect: true,
     maxRetriesPerRequest: 0,
     enableReadyCheck: false,
@@ -87,9 +87,9 @@ async function resolveBackend(): Promise<Backend> {
   return resolvingPromise;
 }
 
-function getSharedRedis(): IORedis {
+function getSharedRedis(): Redis {
   if (sharedRedis) return sharedRedis;
-  sharedRedis = new IORedis(env.REDIS_URL, {
+  sharedRedis = new Redis(env.REDIS_URL, {
     lazyConnect: false,
     maxRetriesPerRequest: null,
     enableReadyCheck: false,

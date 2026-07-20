@@ -120,8 +120,8 @@ export const auth = betterAuth({
     /* Password reset - only functional when SMTP is configured */
     sendResetPassword: smtpEnabled
       ? async ({ user, url }: { user: User; url: string; token: string }) => {
-          const email = resetPasswordEmail(user, url);
-          await sendMail({ to: user.email, ...email });
+          const email = resetPasswordEmail({ name: user.name, email: user.email! }, url);
+          await sendMail({ to: user.email!, ...email });
         }
       : undefined,
 
@@ -131,8 +131,8 @@ export const auth = betterAuth({
     requireEmailVerification: requireEmailVerificationStrict,
     sendVerificationEmail: smtpEnabled
       ? async ({ user, url }: { user: User; url: string; token: string }) => {
-          const email = verifyEmailTemplate(user, url);
-          await sendMail({ to: user.email, ...email });
+          const email = verifyEmailTemplate({ name: user.name, email: user.email! }, url);
+          await sendMail({ to: user.email!, ...email });
         }
       : undefined,
   },
