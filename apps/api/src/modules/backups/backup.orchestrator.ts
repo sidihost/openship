@@ -186,7 +186,7 @@ export class BackupOrchestrator {
       const destination = resolveDestination(adapterRow);
       const preflight = await destination.preflight();
       if (!preflight.ok) {
-        throw new Error(`Destination preflight failed: ${preflight.reason}`);
+        throw new Error(`Destination preflight failed: ${(preflight as { ok: false; reason: string }).reason}`);
       }
       await repos.backupDestination.setLastVerified(destinationRow.id, true);
 
